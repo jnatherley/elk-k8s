@@ -43,6 +43,18 @@ Exposing on your local cluster:\
 Login via the URL below with the user|password as (elastic|password):\
 `http://localhost:5601`
 
+
+## APM
+
+Deploy Kibana in the cluster:\
+`kubectl apply -f ./manifests/apm.yaml`
+
+Monitor the deployment of Kibana to the cluster:\
+`kubectl get apmserver -w`
+
+Get secret token:\
+`kubectl get secret/quickstart-apm-token -o go-template='{{index .data "secret-token" | base64decode}}'`
+
 ## Enabling an Ingress Controller
 
 

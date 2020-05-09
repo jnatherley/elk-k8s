@@ -21,6 +21,14 @@ spec:
             serviceName: quickstart-kb-http
             servicePort: http
           path: /
+
+  - host: apm.lvh.me
+    http:
+      paths:
+        - backend:
+            serviceName: quickstart-apm-http
+            servicePort: http
+          path: /
           
   - host: kuard.lvh.me
     http:
