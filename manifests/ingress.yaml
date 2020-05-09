@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: quickstart
+spec:
+  rules:
+  - host: elasticsearch.lvh.me
+    http:
+      paths:
+        - backend:
+            serviceName: quickstart-es-http
+            servicePort: http
+          path: /
+
+  - host: kibana.lvh.me
+    http:
+      paths:
+        - backend:
+            serviceName: quickstart-kb-http
+            servicePort: http
+          path: /
+          
+  - host: kuard.lvh.me
+    http:
+      paths:
+        - backend:
+            serviceName: kuard-service
+            servicePort: 80
+          path: /
