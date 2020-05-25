@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type User struct {
@@ -39,7 +40,7 @@ func CreateUserHandler(logger *logrus.Logger, store Store) (fn gin.HandlerFunc) 
 			return
 		}
 		logger.WithFields(logrus.Fields{"name": u.Name, "email": u.Email}).Info("New user has been created")
-		c.JSON(200, gin.H{"message": "ok",})
+		c.JSON(200, gin.H{"message": "ok"})
 	}
 
 	return
@@ -47,7 +48,7 @@ func CreateUserHandler(logger *logrus.Logger, store Store) (fn gin.HandlerFunc) 
 
 func generate() (user *User, err error) {
 
-	res, err := http.Get("http://randomuser:3000/api/")
+	res, err := http.Get("https://randomuser/api/")
 
 	if err != nil {
 		return

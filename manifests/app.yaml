@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: elastic-stack-app
+spec:
+  rules:
+  - host: elastic-stack-app.lvh.me
+    http:
+      paths:
+        - backend:
+            serviceName: elastic-stack-app
+            servicePort: http
+          path: /
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastic-stack-app
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+      name: http
+  selector:
+    app: elastic-stack-app
+  clusterIP: None
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: elastic-stack-app
+spec:
+  selector:
+    matchLabels:
+      app: elastic-stack-app
+  template:
+    metadata:
+      labels:
+        app: elastic-stack-app
+    spec:
+      containers:
+      - image: jnatherley/elastic-stack-app:latest
+        name: elastic-stack-app
+        imagePullPolicy: Always
+        env:
+        - name: DATABASE_CONNECTION_STRING
+          value: root:password@(mysql.default.svc.cluster.local:3306)/db
+
+        ports:
+        - containerPort: 80
+          name: http
