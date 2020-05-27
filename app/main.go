@@ -24,7 +24,9 @@ func main() {
 	r.Use(ginlogrus.Logger(logger), gin.Recovery())
 	r.Use(apmgin.Middleware(r))
 
-	r.GET("/", func(c *gin.Context) { c.JSON(200, gin.H{}) })
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{"TAG": os.Getenv("TAG"), "ELASTIC_APM_SERVER_URL": os.Getenv("ELASTIC_APM_SERVER_URL"), "ELASTIC_APM_SECRET_TOKEN": os.Getenv("ELASTIC_APM_SECRET_TOKEN")})
+	})
 	r.POST("/create", user.CreateUserHandler(logger, user.NewUserStore(db, logger)))
 
 	_ = r.Run(":80")

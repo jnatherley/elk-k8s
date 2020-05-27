@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -48,7 +49,8 @@ func CreateUserHandler(logger *logrus.Logger, store Store) (fn gin.HandlerFunc) 
 
 func generate() (user *User, err error) {
 
-	res, err := http.Get("https://randomuser/api/")
+	endpoint := os.Getenv("RANDOM_USER_ENDPOINT")
+	res, err := http.Get(endpoint)
 
 	if err != nil {
 		return

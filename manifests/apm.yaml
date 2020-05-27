@@ -1,7 +1,7 @@
 apiVersion: apm.k8s.elastic.co/v1
 kind: ApmServer
 metadata:
-  name: apm-server-quickstart
+  name: quickstart
   namespace: default
 spec:
   version: 7.6.2

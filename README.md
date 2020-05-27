@@ -34,15 +34,33 @@ Deploy Kibana in the cluster:\
 Monitor the deployment of Kibana to the cluster:\
 `kubectl get kibana -w`
 
-Once GREEN:\
-`kubectl get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo`
-
 Exposing on your local cluster:\
 `kubectl port-forward service/quickstart-kb-http 5601`
 
 Login via the URL below with the user|password as (elastic|password):\
 `http://localhost:5601`
 
+
+## Filebeat
+
+Deploy Kibana in the cluster:\
+`kubectl apply -f ./manifests/filebeat.yaml`
+
+Update the configuration to include the ELASTICSEARCH_PASSWORD you obtained from the Elasticsearch steps
+
+## Deploying an App
+
+Deploy the mysql database:\
+`kubectl apply -f ./manifests/mysql-pvc.yaml`
+`kubectl apply -f ./manifests/mysql.yaml`
+
+Connect to the mysql by exposing it:\
+`kubectl port-forward svc/mysql 3306`
+
+Create a database named `db` using your favourite client.
+
+Deploy the elastic-stack-app:\
+`kubectl apply -f ./manifests/app.yaml`
 
 ## APM
 
@@ -53,10 +71,19 @@ Monitor the deployment of Kibana to the cluster:\
 `kubectl get apmserver -w`
 
 Get secret token:\
-`kubectl get secret/quickstart-apm-token -o go-template='{{index .data "secret-token" | base64decode}}'`
+`TOKEN=$(kubectl get secret/quickstart-apm-token -o go-template='{{index .data "secret-token" | base64decode}}')`
 
-## Enabling an Ingress Controller
+Update the environment of the elastic-stack-app to use the token:
+```
+- name: ELASTIC_APM_SECRET_TOKEN
+    value: <TOKEN>
+```
 
+## Upgrading
+
+To upgrade any service managed by the ECK operator, you need to increment the count of X service so that it's greater than 1. Once done, you can increment the version to one you desire: [https://www.elastic.co/guide/en/elasticsearch/reference/current/es-release-notes.html]
+
+## Enabling an Ingress Controller (Optional)
 
 Setup:
 ```
